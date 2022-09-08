@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>v-for</title>
+</head>
+<body>
+    <div id="app">
+        <button @click="add">增加一名家族成员</button>
+        <button @click="sub">减少一名家族成员</button>
+        <ul>
+            <li v-for="(people, index) in vongala">{{ people.rings }} - {{ people.name }}</li>
+        </ul>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        var app = new Vue({
+            el: "#app",
+            data: {
+                vongala: [
+                    {
+                        name: "沢田纲吉",
+                        rings: "大空"
+                    },
+                    {
+                        name: "狱寺隼人",
+                        rings: "岚守"
+                    },
+                    {
+                        name: "山本武",
+                        rings: "雨守"
+                    },
+                    {
+                        name: "云雀恭弥",
+                        rings: "云守"
+                    },
+                    {
+                        name: "蓝波",
+                        rings: "雷守"
+                    },
+                    {
+                        name: "六道骸",
+                        rings: "雾守"
+                    },
+                    {
+                        name: "笹川了平",
+                        rings: "晴守"
+                    },
+                ]
+            },
+            methods: {
+                add:function(){
+                    this.vongala.push({
+                        name: "笹川京子",
+                        rings: "妻子"
+                    })
+                },
+                sub:function(){
+                    this.vongala.shift()
+                }
+            }
+        })
+    </script>
+</body>
+</html>
