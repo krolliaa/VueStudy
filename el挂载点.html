@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>el：挂载点</title>
+</head>
+<body>
+    {{ message }}
+    <div id="app" class="app">
+        {{ message }}
+        <span>{{ message }}</span>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        var app = new Vue({
+            //el: "#app", id选择器
+            //el: ".app", 类选择器
+            el: "div",//标签选择器
+            data: {
+                message: "Hello Vue2!"
+            }
+        })
+    </script>
+</body>
+</html>

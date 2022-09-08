@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>v-show</title>
+</head>
+<body>
+    <div id="app">
+        <button @click="subAge">点我减小年龄！</button>
+        <button @click="addAge">点我增大年龄！</button>
+        <h2 v-text="'当前年龄为：' + age + '岁！[18 岁以上包括 18 岁可以看照片哦~]'"></h2>
+        <img src="https://th.bing.com/th/id/OIP.xynOAVXBTdCCBCBPOW42VwHaH4?w=142&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7" v-show="1 == 1"></img>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        var app = new Vue({
+            el: "#app",
+            data: {
+                isShow: false,
+                age: 1
+            },
+            methods:{
+                subAge:function(){
+
+                    if(this.age <= 1) {
+                        alert("已经是目前人类的最小年龄啦！！！");
+                        return;
+                    };
+                    this.age -= 1;
+                    if(this.age < 18) {
+                        this.isShow = false;
+                    };
+                },
+                addAge:function(){
+                    if(this.age >= 140) {
+                        alert("已经是目前人类的最大年龄啦！！！");
+                        return;
+                    };
+                    this.age += 1;
+                    if(this.age >= 18) {
+                        this.isShow = true;
+                    };
+                }
+            }
+        })
+    </script>
+</body>
+</html>

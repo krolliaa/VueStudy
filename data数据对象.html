@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>data：数据对象</title>
+</head>
+<body>
+    <div id="app">
+        {{ message }}
+        <h2>{{ vongala.name }}</h2>
+        <h3>{{ vongala.ring }}</h3>
+        <ul>
+            <li>{{ rings[0] }}</li>
+            <li>{{ rings[1] }}</li>
+            <li>{{ rings[2] }}</li>
+            <li>{{ rings[3] }}</li>
+            <li>{{ rings[4] }}</li>
+            <li>{{ rings[5] }}</li>
+            <li>{{ rings[6] }}</li>
+        </ul>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        var app = new Vue({
+            el: "#app",
+            data: {
+                message: "Hello Vue Data!",
+                vongala: {
+                    name: "彭哥列家族",
+                    ring: "一共 7 枚戒指"
+                },
+                rings: ["空", "岚", "雨", "云", "雾", "晴", "雷"]
+            }
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/index.css">
+    <title>图片切换案例</title>
+</head>
+<body>
+    <div id="mask">
+        <div class="center">
+            <h2 class="title">
+              <img src="./images/logo.png" alt="">
+                Vongala
+            </h2>
+            <a href="javascript:void(0)" v-show="imgSrcNum" class="left" @click="prev"><img src="./images/prev.png" alt=""></a>
+            <img :src="'./images/'+indexImages[imgSrcNum]+'.jpg'"/>            
+            <a href="javascript:void(0)" v-show="imgSrcNum<indexImages.length-1" @click="next" class="right"><img src="./images/next.png" alt=""></a>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        var app = new Vue({
+            el: "#mask",
+            data: {
+                indexImages: ["00","01","02","03","04","05","06","07","08","09","10"],
+                index: 0,
+                imgSrcNum: 0
+            },
+            methods: {
+                prev:function(){
+                    this.imgSrcNum--;
+                },
+                next:function(){
+                    this.imgSrcNum++;
+                }
+            }
+        })
+    </script>
+</body>
+</html>
