@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>axios + vue</title>
+</head>
+<body>
+    <div id="app">
+        <button @click="getJoke">点我获取笑话哦</button>
+        <h4 v-text="joke">{{ joke }}</h4>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        var app = new Vue({
+            el: "#app",
+            data: {
+                joke: "很好笑的笑话在这里显示哦~"
+            },
+            methods: {
+                getJoke: function(){
+                    var that = this;
+                    axios.get("https://autumnfish.cn/api/joke/list?num=1").then(function(response){
+                        //无法通过 this 拿到 vue 实例 ---> 外部顶一个 that 拿到 this
+                        that.joke = response.data.data[0];
+                        console.log(response);
+                    }, function(error){
+                        this.joke = "获取笑话失败！";
+                    });
+                }
+            }
+        })
+    </script>
+</body>
+</html>

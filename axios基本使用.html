@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>axios基本使用</title>
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        axios.get("https://autumnfish.cn/api/joke/list?num=6").then(function(response){
+            console.log(response.data.data);
+        }, function(error){
+            console.log(error);
+        });
+        axios.post("https://autumnfish.cn/api/user/reg", {
+            "username":"彭哥列家族"
+        }).then(function(response){
+            console.log(response)
+        }, function(error){
+            console.log(error);
+        });
+    </script>
+</body>
+</html>
