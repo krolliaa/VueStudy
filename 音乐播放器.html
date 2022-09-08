@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./musiccss/index.css"/>
+    <title>音乐播放器</title>
+</head>
+<body>
+    <div class="wrap">
+        <div class="play_wrap" id="player">
+            <!-- 搜索框 -->
+            <div class="search_bar">
+                <img src="./musicimages/player_title.png">
+                <input v-model="query" type="text" autocomplete="off" @keyup.enter="searchMusic" @click="searchMusic">
+            </div>
+            <div class="center_con">
+                <!-- 搜索结果 -->
+                <div class="song_wrapper" ref="song_wrapper">
+                    <ul class="song_list">
+                        <!-- 遍历查询到的播放列表 -->
+                        <li v-for="(music, index) in musicList">
+                            <!-- 播放歌曲 -->
+                            <a href="javascript:void(0);" @click="playMusic(music.id)"></a>
+                            {{ music.name }}
+                            <!-- 播放MV -->
+                            <span>
+                                <!-- MV 按钮，有 MV 才显示 -->
+                                <i @click="playMV(music.mvid)" v-if="music.mvid != 0"></i>
+                            </span>
+                        </li>
+                    </ul>
+                    <!-- 播放列表和播放界面的分割线 -->
+                    <img src="images/line.png" class="switch_btn" alt="">
+                </div>
+                <!-- 播放界面 -->
+                <div class="player_con" :class="{playing:isPlay}">
+                    <!-- 播放杆 -->
+                    <img src="./musicimages/player_bar.png" class="play_bar">
+                    <!-- 黑胶碟片 -->
+                    <img src="/musicimages/disc.png" class="disc autoRotate" />
+                    <!-- 碟片封面 随歌曲变化而变化 -->
+                    <img :src="musicCover==''?'./musicimages/cover.png':musicCover" class="cover autoRotate">
+                </div>
+                <!-- 评论列表 -->
+                <div class="comment_wrapper" ref='comment_wrapper'>
+                    <!-- 黑胶碟片和留言分割线 -->
+                    <img src="./musicimages/line.png" class="right_line">
+                    <h5 class='title'>精选留言</h5>
+                    <div class="comment_list">
+                        <!-- 遍历留言 -->
+                        <dl v-for="(hotComment, index) in hotComments">
+                            <dt>
+                                <img :src="hotComment.user.avatarUrl">
+                            </dt>
+                            <dd class="name">{{ hotComment.user.nickname }}</dd>
+                            <dd class="detail">
+                                {{ hotComment.content }}
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <!-- 音乐播放底部 默认显示音乐而并不是MV -->
+            <div class="audio_con">
+                <audio ref='audio' @play="play" @pause="pause" :src="musicURL" controls autoplay loop class="myaudio"></audio>
+              </div>
+            <!-- MV播放底部 -->
+            <div class="video_con" v-show="showVideo">
+                <video ref='video' :src="mvURL" controls="controls"></video>
+                <div class="mask" @click="closeMv"></div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        //设置 axios 访问的基础 URL
+        axios.defaults.baseURL = 'https://autumnfish.cn';
+        var player = new Vue({
+            el: "#player",
+            data: {
+                query: "",
+                showVideo: false,
+                musicList: [],
+                hotComments: [],
+                musicURL: "",
+                mvURL: "",
+                musicCover: "",
+                isPlay: false
+            },
+            methods: {
+                // 搜索功能 ---> 结果存储在 musicList 中 ---> 获取关键字使用 v-model ---> 如果关键字为空，不进行查询，直接返回
+                searchMusic:function(){
+                    if(this.query == "") return;
+                    //箭头函数的 this 跟外层一致
+                    axios.get("/search?keywords=" + this.query).then(response => {
+                        this.musicList = response.data.result.songs;
+                    });
+                    this.query = "";
+                },
+                playMusic:function(musicId){
+                    //获取这首歌曲进行播放 ---> 替换音乐播放底部 musicURL
+                    axios.get("/song/url?id=" + musicId).then(response => {
+                        this.musicURL = response.data.data[0].url;
+                    })
+                    //获取这首歌曲的封面 ---> 设置黑胶碟片的封面 
+                    axios.get("/song/detail?ids=" + musicId).then(response => {
+                        this.musicCover =  response.data.songs[0].al.picUrl;
+                    });
+                    //获取这首歌曲的精选留言 ---> 设置留言列表
+                    axios.get('/comment/hot?type=0&id=' + musicId).then(response => {
+                        this.hotComments = response.data.hotComments;
+                    });
+                },
+                playMV:function(mvid){
+                    if(mvid) {
+                        this.showVideo = true;
+                        axios.get('/mv/url?id=' + mvid).then(response => {
+                            // 暂停歌曲播放
+                            this.$refs.audio.pause();
+                            // 获取mv地址
+                            this.mvURL = response.data.data.url;
+                        })
+                    }
+                },
+                play:function(){
+                    this.isPlay = true;
+                    this.mvURL = "";
+                },
+                pause:function(){
+                    this.isPlay = false;
+                },
+                closeMv:function(){
+                    this.showVideo = false;
+                    this.$refs.video.pause();
+                }
+            }
+        })
+    </script>
+</body>
+</html>
