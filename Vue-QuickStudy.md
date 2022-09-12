@@ -1101,3 +1101,47 @@
 </body>
 </html>
 ```
+
+## `Vue`生命周期
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue 生命周期</title>
+</head>
+<body>
+    <div id="app">
+        <h2 id="h2" v-text="message"></h2>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        var app = new Vue({
+            el: "#app", 
+            data: {
+                message: "床前明月光"
+            },
+            methods: {
+                show:function(){
+                    console.log('show方法被调用');
+                }
+            },
+            //页面已经初始化完毕，可以操作 data 中的数据，调用 methods 中的方法，但是数据还没有被渲染到页面中，用户看不见
+            created() {
+                console.log(this.message);
+                this.show();
+                console.log(document.getElementById('h2').innerText)
+            },
+            //数据已经被渲染到页面之中
+            mounted() {
+                console.log("mounted");
+                console.log(document.getElementById("h2").innerText);
+            }
+        });
+    </script>
+</body>
+</html>
+```
