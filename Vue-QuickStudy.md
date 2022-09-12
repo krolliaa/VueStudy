@@ -1145,3 +1145,131 @@
 </body>
 </html>
 ```
+
+## `Vue`跨域问题
+
+使用`Vue + AXios`发送请求查询讲师列表并显示在页面中：
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>axios + vue</title>
+</head>
+<body>
+    <div id="app">
+        <button @click="getTeachers">获取讲师列表</button>
+        <tr v-show="teachers.length!=0" v-for="(teacher, index) in teachers">
+            <td v-text="teacher.id"></td>
+            <td v-text="teacher.name"></td>
+        </tr>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        var app = new Vue({
+            el: "#app",
+            data: {
+                teachers: []
+            },
+            methods: {
+                getTeachers: function(){
+                    axios.get("http://localhost:8110/admin/edu/teacher/list").then(response => {
+                        this.teachers = response.data.data.items;
+                    }, error => {
+                        console.log(error);
+                    });
+                }
+            }
+        })
+    </script>
+</body>
+</html>
+```
+
+无法访问，因为存在跨域，要解决跨域问题就得知道为什么会出现跨域问题？
+
+**<font color="red">注：如果传参或者什么其它的错误都会报跨域错误，注意甄别。</font>**
+
+- 出于浏览器的同源策略限制：
+
+- - 所谓同源（即指在同一个域）就是两个地址具有相同的协议`（protocol）`，主机`（host）`和端口号`（port）`
+  - 同源策略会阻止一个域的`javascript`脚本和另外一个域的内容进行交互。
+
+- 同源策略`（Sameoriginpolicy）`是一种约定，它是浏览器最核心也最基本的安全功能。
+
+解决跨域问题，在相应的`Controller`层使用如下注解即可：
+
+```java
+@CrossOrigin //解决跨域问题
+```
+
+## `Vue`业务分层
+
+因为不可能将`url`写死，所以这里采用分层方法来实现访问后端接口：
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>axios + vue</title>
+</head>
+<body>
+    <div id="app">
+        <button @click="getTeachers2">获取讲师列表</button>
+        <table>
+            <tr v-for="(teacher, index) in teachers">
+                <td v-text="teacher.id"></td>
+                <td v-text="teacher.name"></td>
+            </tr>
+        </table>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        var app = new Vue({
+            el: "#app",
+            data: {
+                teachers: []
+            },
+            methods: {
+                getTeachers: function(){
+                    axios.get("http://localhost:8110/admin/edu/teacher/list").then(response => {
+                        this.teachers = response.data.data.items;
+                    }, error => {
+                        console.log(error);
+                    });
+                },
+                initRequest:function(){
+                    return axios.create({
+                        baseURL: "http://localhost:8110",
+                        timeout: 5000
+                    });
+                },
+                teacherListApi:function(){
+                    let request = this.initRequest();
+                    return request({
+                        url: "/admin/edu/teacher/list",
+                        method: "get"
+                    });
+                },
+                getTeachers2:function(){
+                    this.teacherListApi().then(response => {
+                        let result = response.data;
+                        this.teachers = result.data.items;
+                    }, error => {
+                        console.log(error);
+                    });
+                }
+            }
+        })
+    </script>
+</body>
+</html>
+```
