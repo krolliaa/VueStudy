@@ -16,8 +16,10 @@
     <script>
         var app = new Vue({
             el: "#app",
-            data: {
-                joke: "很好笑的笑话在这里显示哦~"
+            data:function() {
+                return {
+                    joke: "很好笑的笑话在这里显示哦~"
+                }
             },
             methods: {
                 getJoke: function(){
