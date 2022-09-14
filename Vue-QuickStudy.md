@@ -1,3 +1,12 @@
+---
+title: Vue
+categories: 
+- Framework
+tags: 
+- Front End
+- Vue
+---
+
 # `Vue`
 
 ## `Vue`基础
@@ -1273,3 +1282,173 @@
 </body>
 </html>
 ```
+
+## `Vue`路由
+
+`Vue`路由可以创建锚点，制作单页应用，预先加载页面内容。也就是说：路由允许我们通过锚点定义不同的`URL`， 达到访问不同的页面的目的，每个页面的内容通过延迟加载渲染出来。
+
+通过`Vue.js`可以实现多视图的单页`Web`应用`（single page web application，SPA）`
+
+1. 创建文件夹`router_pro`
+
+2. 导入`vue.min.js`和`vue-router.min.js`文件
+
+3. 创建`路由.html`
+
+4. 引入`js`
+
+   ```html
+   <script src="vue.min.js"></script>
+   <script src="vue-router.min.js"></script>
+   ```
+
+5. 编写`html`：
+
+   ```html
+   <!DOCTYPE html>
+   <html lang="en">
+   
+   <head>
+       <meta charset="UTF-8">
+       <meta http-equiv="X-UA-Compatible" content="IE=edge">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <title>Router</title>
+   </head>
+   
+   <body>
+       <div id="app">
+           <router-link to="/welcome">欢迎页面</router-link>
+           <router-link to="/teacher">讲师列表</router-link>
+           <router-link to="/student">学生列表</router-link>
+           <router-view></router-view>
+       </div>
+       <script src="vue.min.js"></script>
+       <script src="vue-router.min.js"></script>
+       <script>
+           const Welcome = { template: '<h2>Vongala-AA</h2>' };
+           const Teacher = { template: '<h2>教师列表噢~</h2>' };
+           const Student = { template: '<h2>学生列表噢~</h2>' };
+           const routes = [
+               { path: '/', redirect: '/welcome' },
+               { path: '/welcome', component: Welcome },
+               { path: '/teacher', component: Teacher },
+               { path: '/student', component: Student }
+           ];
+           const router = new VueRouter({
+               routes: routes
+           });
+           var app = new Vue({
+               el: "#app",
+               router: router
+           })
+       </script>
+   </body>
+   </html>
+   ```
+
+## `Vue`计算属性
+
+计算属性和方法有什么区别呢？你试试调用两次，可以看到计算属性只调用了一次，因为依赖的属性没有改变，只有当这个所依赖的属性发生了改变，计算属性才会重新被调用，也因此性能更佳。
+
+所以，对于任何复杂逻辑，你都应当使用**计算属性`Computed`**
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>computed</title>
+</head>
+<body>
+    <div id="app">
+        <p>原始值：{{ message }}</p>
+        <!-- 这样写可读性比较差 -->
+        <p>反转字符串：{{ message.split('').reverse().join('') }}</p>
+        <!-- 使用方法反转 -->
+        <p>使用方法：{{ reversed() }}</p>
+        <p>使用方法：{{ reversed() }}</p>
+        <!-- 和方法差不多的就是计算属性了。因为是一个属性所以可以直接写 -->
+        <p>使用计算属性：{{ reverseMessage }}</p>
+        <p>使用计算属性：{{ reverseMessage }}</p>
+        <!-- 计算属性和方法有什么区别呢？你试试调用两次，可以看到计算属性只调用了一次，因为依赖的属性没有改变，只有当这个所依赖的属性发生了改变，计算属性才会重新被调用，也因此性能更佳 -->
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        var app = new Vue({
+            el: "#app",
+            data: function() {
+                return {
+                    message: 'Hello'
+                }
+            },
+            computed: {
+                reverseMessage:function() {
+                    console.log('计算属性')
+                    return this.message.split('').reverse().join('')
+                }
+            },
+            methods: {
+                reversed: function() {
+                    console.log('方法')
+                    return this.message.split('').reverse().join('')
+                }
+            }     
+        })
+    </script>
+</body>
+</html>
+```
+
+## `Vue`组件
+
+组件`（Component）`是`Vue.js`最强大的功能之一。组件可以扩展`HTML`元素，封装可重用的代码。
+
+组件系统让我们可以用独立可复用的小组件来构建大型应用，几乎任意类型的应用界面都可以抽象为一个组件树：![img](https://img-blog.csdnimg.cn/6de407b3a7a841debfe7cba75f211e05.png)
+
+依据该项目对前端组件进行分析：
+
+**<font color="red">整个逻辑推导过程如下：</font>**首先从入口文件`main.js`出发，可以看到引入了`App.vue`和`router`文件夹中的`index.js`。我们知道路由就是指路牌，所以我们到`index.js`看一下，可以看到引入了`views/layout/Layout.vue`组件，在这里可以看到引入了`Navbar Sidebar AppMain`也就是顶部边栏，侧边栏还有主页面，而`AppMain.vue`存放了`<router-view :key="key"/>。`所以在`router/index.js`中定义的页面出口就在这里。然后你可以在`Sidebar Navbar`中自定义组件。总的来说就是一个嵌套的过程。所有的过程组件嵌套啥的，`vue-element-admin`帮我们做好了以至于我们不用自己再去写轮子，专注于业务上的开发即可。你只需要定义路由`router/index.js` ---> 视图`view/teachers/xx.vue` ---> 接口`api/teacher.js`按照这个流程完成即可。
+
+三要素：
+
+- 入口`js`：`src/main.js`
+- 入口页面：`src/App.vue`
+- 路由：`src/router/index.js`
+
+`main.js`中引入了`App.vue`和`router/index.js`，根据路由配置，`App.vue`中会显示相应的页面内容。
+
+入口文件：`src/main.js`
+
+![img](https://img-blog.csdnimg.cn/3f2141157d374d84b266656a389ef3d4.png)
+
+主页面模块：`src/App.vue`
+
+![img](https://img-blog.csdnimg.cn/297e447124984b9f889171a8d46724fd.png)
+
+路由模块：`src/router/index.js`
+
+![img](https://img-blog.csdnimg.cn/99f9c16c0c634391b9e2ab7db95f1b5e.png)
+
+登录页面组件：
+
+![img](https://img-blog.csdnimg.cn/0939618ef9e34aa6bca6fa83bee29ccf.png)
+
+前端项目布局分析：整个页面存放在`Layout`组件，该组件又存放了`Navbar, Sidebar, AppMain`，顶部边栏，侧边栏还有主内容区，这也就是为什么我们在`AppMain.vue`组件中使用计算属性了。
+
+路由模块：`src/router/index.js`
+
+![img](https://img-blog.csdnimg.cn/0acf56c751694a0b80aed66a1f16a383.png)
+
+布局模块：`src/views/layout/Layout.vue`【整个页面布局】
+
+![img](https://img-blog.csdnimg.cn/a9fdead9abec4c8b95e51a03f8406c75.png)
+
+核心内容区域：`src/views/layout/components/AppMain.vue`，这里有`<router-view>`代表的是整个路由出口。
+
+![img](https://img-blog.csdnimg.cn/7bfdc5438e9b4c4b94f9ebe9c3aa423e.png)
+
+讲师列表页面组件：
+
+![img](https://img-blog.csdnimg.cn/fdc125ef59814fd4b7c737682d7b1e93.png)
